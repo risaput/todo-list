@@ -6,8 +6,14 @@ const Todo = (function() {
   const todo = document.getElementById('todo');
 
   function addTask() {
-    tasks.push(formInput.value)
-    formInput.value = ''
+    const newTask = {
+      task: formInput.value,
+      time: 'Sab, Sep 30 07.13',
+      done: false
+    }
+
+    formInput.value = '';
+    tasks.push(newTask);
     showTask()
   }
 
@@ -17,19 +23,25 @@ const Todo = (function() {
     return element;
   }
 
-  window.addEventListener('click', function(e) {
+  function handleClick(e) {
+    const section = e.target.parentElement;
+    const span = section.firstChild;
+
+    const tasksCopy = Array.from(tasks);
+    const ind = tasksCopy.findIndex(t => t.task == span.textContent);
+
     if (e.target.classList.contains('todo-remove')) {
-      const section = e.target.parentElement;
-      const content = section.firstChild.textContent;
-      
-      const tasksCopy = [].concat(tasks)
-      const ind = tasksCopy.indexOf(content);
       tasksCopy.splice(ind, 1);
-      
       tasks = tasksCopy;
-      section.remove()
+      section.remove();
     }
-  })
+
+    if (e.target.classList.contains('todo-content')) {
+      tasks[ind].done = !tasks[ind].done;
+      const val = tasks[ind].done ? 'line-through' : 'none';
+      span.style.textDecoration = val;
+    }
+  }
 
   function addBtnRemove() {
     const todoList = Array.from(
@@ -39,39 +51,40 @@ const Todo = (function() {
       'span',
       'todo__remove todo-remove'
     )
-    span.append('[x]')
-    
+    span.append('[x]');
+
     for (list of todoList) {
-      list.append(span)
+      list.append(span);
     }
   }
 
   function showTask() {
-    let ind = 0
+    let ind = 0;
     for (task of tasks) {
-      ind = tasks.indexOf(task)
+      ind = tasks.indexOf(task);
     }
     const span = createElem(
       'span',
-      'todo__content'
+      'todo__content todo-content'
     )
     const section = createElem(
       'section',
       'todo__list todo-list'
     )
-    span.append(tasks[id])
-    section.append(span)
-    todo.append(section)
-    
+    span.append(tasks[ind].task);
+    section.append(span);
+    todo.append(section);
+
     addBtnRemove()
   }
 
   return {
     start: function() {
-      formBtn.addEventListener('click', addTask)
-    }
+      formBtn.addEventListener('click', addTask);
+      window.addEventListener('click', handleClick);
+    },
   }
 
 })();
 
-Todo.start()
+Todo.start();
