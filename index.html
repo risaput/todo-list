@@ -13,16 +13,25 @@
 
 <body>
   <div class="container">
-    <h2>Todo List</h2>
-    <form class="form" idr"form" action="">
-      <input id="form-input" type="text">
-      <input id="form-btn" type="button" value="Add">
-    </form>
-    <div class="todo" id="todo">
-      <section class="todo__list">
-        <span class="todo__content">Content</span>
-        <span class="todo__delete">[x]</span>
-      </section>
+    <div class="hero">
+      <h1 class="hero__title">📑 Todo list</h1>
+    </div>
+    <div class="wrapper">
+      <div class="modal" id="modal">
+        <div class="modal__wrapper" id="modal-wrapper">
+          <h2 class="modal__header">📝 New task</h2>
+          <form class="modal__input">
+            <small class="input__label">Task</small>
+            <input class="input__text" id="input-text" type="text" placeholder="Buy coffee...">
+            <small class="input__label">Time</small>
+            <input class="input__time" id="input-time" type="time">
+            <input class="input__add" id="input-add" type="button" value="Add">
+          </form>
+        </div>
+      </div>
+      <button class="modal__btn" id="modal-btn" onclick="Todo.showModal()" type="button">+</button>
+
+      <div class="content" id="content"></div>
     </div>
   </div>
   <script src="main.js"></script>

@@ -1,21 +1,40 @@
 const Todo = (function() {
-  let tasks = [];
 
-  const formBtn = document.getElementById('form-btn');
-  const formInput = document.getElementById('form-input');
-  const todo = document.getElementById('todo');
+  let initTasks = [
+    { isDone: false, task: "Learn", time: "Sab, Sep 30 07.13" },
+    { isDone: false, task: "Play", time: "Sab, Sep 30 07.13" },
+    { isDone: true, task: "Buy Coffee", time: "Sab, Sep 30 07.13" },
+  ];
+
+  let savedTasks = JSON.parse(localStorage.getItem('todos')) || initTasks;
+
+ const elem = {
+  modal: document.getElementById('modal'),
+  modal_wp: document.getElementById('modal-wrapper')
+}
+
+  const inputBtn = document.getElementById('input-add');
+  const inputText = document.getElementById('input-text');
+  const inputTime = document.getElementById('input-time');
+
+  const content = document.getElementById('content');
 
   function addTask() {
+    //const dateTime = `${new Date().toDateString()} ${inputTime.value}`
+
     const newTask = {
-      task: formInput.value,
-      time: 'Sab, Sep 30 07.13',
-      done: false
+      task: inputText.value,
+      time: inputTime.value,
+      isDone: false
     }
 
-    formInput.value = '';
-    tasks.push(newTask);
+    inputText.value = '';
+    savedTasks.push(newTask)
+    localStorage.setItem('todos', JSON.stringify(savedTasks))
     showTask()
   }
+
+  for (let task of savedTasks) showTask(task)
 
   function createElem(elem, name) {
     const element = document.createElement(elem);
@@ -24,22 +43,29 @@ const Todo = (function() {
   }
 
   function handleClick(e) {
-    const section = e.target.parentElement;
-    const span = section.firstChild;
-
-    const tasksCopy = Array.from(tasks);
-    const ind = tasksCopy.findIndex(t => t.task == span.textContent);
+    const savedTasksCopy = Array.from(savedTasks);
+    let ind = 0;
 
     if (e.target.classList.contains('todo-remove')) {
-      tasksCopy.splice(ind, 1);
-      tasks = tasksCopy;
-      section.remove();
+      const section = e.target.parentElement;
+      const span = section.firstChild
+      ind = savedTasksCopy.findIndex(t => t.task == span.textContent);
+      savedTasksCopy.splice(ind, 1);
+
+      localStorage.setItem('todos', JSON.stringify(savedTasksCopy));
+      savedTasks = JSON.parse(localStorage.getItem('todos')) || []
+      e.target.parentElement.remove();
     }
 
     if (e.target.classList.contains('todo-content')) {
-      tasks[ind].done = !tasks[ind].done;
-      const val = tasks[ind].done ? 'line-through' : 'none';
-      span.style.textDecoration = val;
+      savedTasks[ind].isDone = !savedTasks[ind].isDone;
+      const val = savedTasks[ind].isDone ? 'line-through' : 'none';
+      e.target.style.textDecoration = val;
+    }
+
+    if (e.target.classList.contains('modal')) {
+      modal.classList.remove('active')
+      //modalWrapper.classList.remove('active')
     }
   }
 
@@ -51,40 +77,51 @@ const Todo = (function() {
       'span',
       'todo__remove todo-remove'
     )
-    span.append('[x]');
+    span.append('❌');
 
     for (list of todoList) {
       list.append(span);
     }
   }
 
-  function showTask() {
-    let ind = 0;
-    for (task of tasks) {
-      ind = tasks.indexOf(task);
-    }
+  function showTask(task) {
     const span = createElem(
       'span',
       'todo__content todo-content'
     )
+    const small = createElem(
+      'small',
+      'todo__time'
+    )
     const section = createElem(
       'section',
-      'todo__list todo-list'
+      'todo todo-list'
     )
-    span.append(tasks[ind].task);
+
+    const todo = task ? task : savedTasks[savedTasks.length - 1];
+
+    span.append(todo.task);
     section.append(span);
-    todo.append(section);
+
+    small.append(todo.time)
+    section.append(small)
+
+    content.append(section);
 
     addBtnRemove()
   }
 
   return {
-    start: function() {
-      formBtn.addEventListener('click', addTask);
+    click: function() {
+      inputBtn.addEventListener('click', addTask);
       window.addEventListener('click', handleClick);
     },
+    showModal: function() {
+      elem.modal.classList.add('active')
+      elem.modal_wp.classList.add('active');
+    }
   }
 
 })();
 
-Todo.start();
+Todo.click()
