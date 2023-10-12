@@ -1,4 +1,4 @@
-const Todo = (function() {
+window.onload = function() {
 
   let initTasks = [
     { isDone: false, task: "Learn", time: "Sab, Sep 30 07.13" },
@@ -8,16 +8,11 @@ const Todo = (function() {
 
   let savedTasks = JSON.parse(localStorage.getItem('todos')) || initTasks;
 
- const elem = {
-  modal: document.getElementById('modal'),
-  modal_wp: document.getElementById('modal-wrapper')
-}
+  const modal = document.getElementById('modal');
+  const modalWrapper = document.getElementById('modal-wrapper');
 
-  const inputBtn = document.getElementById('input-add');
   const inputText = document.getElementById('input-text');
   const inputTime = document.getElementById('input-time');
-
-  const content = document.getElementById('content');
 
   function addTask() {
     //const dateTime = `${new Date().toDateString()} ${inputTime.value}`
@@ -65,7 +60,7 @@ const Todo = (function() {
 
     if (e.target.classList.contains('modal')) {
       modal.classList.remove('active')
-      //modalWrapper.classList.remove('active')
+      modalWrapper.classList.remove('active')
     }
   }
 
@@ -79,12 +74,12 @@ const Todo = (function() {
     )
     span.append('❌');
 
-    for (list of todoList) {
-      list.append(span);
-    }
+    for (list of todoList) list.append(span);
   }
 
   function showTask(task) {
+    const content = document.getElementById('content');
+
     const span = createElem(
       'span',
       'todo__content todo-content'
@@ -98,7 +93,8 @@ const Todo = (function() {
       'todo todo-list'
     )
 
-    const todo = task ? task : savedTasks[savedTasks.length - 1];
+    const todo = task ? task : 
+      savedTasks[savedTasks.length - 1];
 
     span.append(todo.task);
     section.append(span);
@@ -110,18 +106,18 @@ const Todo = (function() {
 
     addBtnRemove()
   }
-
-  return {
-    click: function() {
-      inputBtn.addEventListener('click', addTask);
-      window.addEventListener('click', handleClick);
-    },
-    showModal: function() {
-      elem.modal.classList.add('active')
-      elem.modal_wp.classList.add('active');
-    }
+  
+  function showModal(evt) {
+    modal.classList.add('active')
+    modalWrapper.classList.add('active')
   }
 
-})();
+  document.getElementById('modal-btn')
+    .addEventListener('click', showModal)
+    
+  document.getElementById('input-add')
+    .addEventListener('click', addTask);
+    
+  window.addEventListener('click', handleClick);
 
-Todo.click()
+}

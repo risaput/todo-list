@@ -58,7 +58,7 @@ input:not([type="button"]) {
 
 .modal__header {
   font-weight: normal;
-  margin: 0.5rem 0 1.2rem;
+  margin: 0.5rem 0 1rem;
 }
 
 .modal__wrapper {
@@ -75,7 +75,7 @@ input:not([type="button"]) {
 }
 
 .hero {
-  padding: 1rem;
+  padding: 0.1rem 1rem;
   background: var(--accent);
   color: var(--light);
 }
