@@ -8,13 +8,10 @@ window.onload = function() {
 
   let savedTasks = JSON.parse(localStorage.getItem('todos')) || initTasks;
 
-  const modal = document.getElementById('modal');
-  const modalWrapper = document.getElementById('modal-wrapper');
-
-  const inputText = document.getElementById('input-text');
-  const inputTime = document.getElementById('input-time');
-
   function addTask() {
+    const inputText = document.getElementById('input-text');
+    const inputTime = document.getElementById('input-time');
+
     //const dateTime = `${new Date().toDateString()} ${inputTime.value}`
 
     const newTask = {
@@ -44,7 +41,7 @@ window.onload = function() {
     if (e.target.classList.contains('todo-remove')) {
       const section = e.target.parentElement;
       const span = section.firstChild
-      ind = savedTasksCopy.findIndex(t => t.task == span.textContent);
+      ind = savedTasksCopy.findIndex(tsk => tsk.task == span.textContent);
       savedTasksCopy.splice(ind, 1);
 
       localStorage.setItem('todos', JSON.stringify(savedTasksCopy));
@@ -56,11 +53,8 @@ window.onload = function() {
       savedTasks[ind].isDone = !savedTasks[ind].isDone;
       const val = savedTasks[ind].isDone ? 'line-through' : 'none';
       e.target.style.textDecoration = val;
-    }
+      console.log(ind);
 
-    if (e.target.classList.contains('modal')) {
-      modal.classList.remove('active')
-      modalWrapper.classList.remove('active')
     }
   }
 
@@ -93,7 +87,7 @@ window.onload = function() {
       'todo todo-list'
     )
 
-    const todo = task ? task : 
+    const todo = task ? task :
       savedTasks[savedTasks.length - 1];
 
     span.append(todo.task);
@@ -106,18 +100,26 @@ window.onload = function() {
 
     addBtnRemove()
   }
-  
+
   function showModal(evt) {
-    modal.classList.add('active')
-    modalWrapper.classList.add('active')
+    const modal = document.getElementById('modal');
+    const modalWrapper = document.getElementById('modal-wrapper');
+
+    if (evt.target.id == 'modal-btn') {
+      modal.classList.add('active');
+      modalWrapper.classList.add('active');
+    }
+    if (evt.target.id == 'modal' || evt.target.id == 'input-add') {
+      modal.classList.remove('active')
+      modalWrapper.classList.remove('active')
+    }
   }
 
-  document.getElementById('modal-btn')
-    .addEventListener('click', showModal)
-    
+  window.addEventListener('click', showModal)
+
   document.getElementById('input-add')
     .addEventListener('click', addTask);
-    
+
   window.addEventListener('click', handleClick);
 
 }
