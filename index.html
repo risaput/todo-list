@@ -20,12 +20,12 @@
       <div class="modal" id="modal">
         <div class="modal__wrapper" id="modal-wrapper">
           <h2 class="modal__header">New task</h2>
-          <form class="modal__input">
-            <small class="input__label">Task</small>
-            <input class="input__text" id="input-text" type="text" placeholder="Buy coffee...">
-            <small class="input__label">Time</small>
-            <input class="input__time" id="input-time" type="time">
-            <input class="input__add" id="input-add" type="button" value="Add">
+          <form class="modal__input" id="form">
+            <label class="input__label">Task</label>
+            <input class="input__text" id="input-text" type="text" placeholder="Buy coffee..." required>
+            <label class="input__label">Time</label>
+            <input class="input__time" id="input-time" type="time" required>
+            <input class="input__add" id="input-add" type="submit" value="Add">
           </form>
         </div>
       </div>

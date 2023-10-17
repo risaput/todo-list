@@ -6,26 +6,13 @@ window.onload = function() {
     { isDone: true, task: "Buy Coffee", time: "Sab, Sep 30 07.13" },
   ];
 
+  const form = document.getElementById('form')
+
   let savedTasks = JSON.parse(localStorage.getItem('todos')) || initTasks;
   const content = document.getElementById('content');
 
-  function addTask() {
-    const inputText = document.getElementById('input-text');
-    const inputTime = document.getElementById('input-time');
-
-    //const dateTime = `${new Date().toDateString()} ${inputTime.value}`
-
-    const newTask = {
-      task: inputText.value,
-      time: inputTime.value,
-      isDone: false
-    }
-
-    inputText.value = '';
-    savedTasks.push(newTask)
-    localStorage.setItem('todos', JSON.stringify(savedTasks))
-    showTask()
-  }
+  const inputText = document.getElementById('input-text');
+  const inputTime = document.getElementById('input-time');
 
   for (let task of savedTasks) showTask(task)
 
@@ -35,10 +22,10 @@ window.onload = function() {
     return element;
   }
 
-  function handleClick(evt) {
+  window.addEventListener('click', function(evt) {
     const { classList } = evt.target;
     const savedTasksCopy = Array.from(savedTasks);
-    
+
     if (classList.contains('todo-remove')) {
       const section = evt.target.parentElement;
       const text = section.firstChild.textContent;
@@ -54,14 +41,16 @@ window.onload = function() {
     if (classList.contains('todo-list')) {
       const span = evt.target.firstChild
       const idx = savedTasksCopy.findIndex(tasks => tasks.task == span.textContent);
+
       savedTasksCopy[idx].isDone = !savedTasksCopy[idx].isDone;
       localStorage.setItem('todos', JSON.stringify(savedTasksCopy));
+
       savedTasks = JSON.parse(localStorage.getItem('todos')) || []
       const val = savedTasksCopy[idx].isDone ? 'line-through' : 'none';
       span.style.textDecoration = val;
     }
 
-  }
+  })
 
   function addBtnRemove() {
     const todoList = Array.from(
@@ -78,7 +67,7 @@ window.onload = function() {
   }
 
   function showTask(task) {
-    
+
     const span = createElem(
       'span',
       'todo__content todo-content'
@@ -91,15 +80,15 @@ window.onload = function() {
       'section',
       'todo todo-list'
     )
-    
 
-    const todo = task ? task :
-      savedTasks[savedTasks.length - 1];
+    if (task.isDone) {
+      span.style.textDecoration = 'line-through';
+    }
 
-    span.append(todo.task);
+    span.append(task.task);
     section.append(span);
 
-    small.append(todo.time)
+    small.append(task.time)
     section.append(small)
 
     content.append(section);
@@ -107,25 +96,47 @@ window.onload = function() {
     addBtnRemove()
   }
 
-  function modalToggle(evt) {
-    const modal = document.getElementById('modal');
-    const modalWrapper = document.getElementById('modal-wrapper');
+
+  const modal = document.getElementById('modal');
+  const modalWrapper = document.getElementById('modal-wrapper');
+  
+  window.addEventListener('click', function(evt) {
     const id = evt.target.id
 
     if (id == 'modal-btn') {
       modal.classList.add('active')
       modalWrapper.classList.add('active')
     }
-    if (id == 'modal' || id == 'input-add') {
+    if (id == 'modal') {
       modal.classList.remove('active')
       modalWrapper.classList.remove('active')
     }
+  })
+
+  function checkRequired(inputArr) {
+    inputArr.forEach(function(input) {
+      if (input.required) {
+        modal.classList.remove('active')
+        modalWrapper.classList.remove('active')
+      }
+    })
   }
 
-  const inputAdd = document.getElementById('input-add')
-  inputAdd.addEventListener('click', addTask)
-  window.addEventListener('click', modalToggle)
+  form.addEventListener('submit', function(evt) {
+    evt.preventDefault()
 
-  content.addEventListener('click', handleClick);
+    checkRequired([inputText, inputTime])
+
+    const newTask = {
+      task: inputText.value,
+      time: inputTime.value,
+      isDone: false
+    }
+    //const dateTime = `${new Date().toDateString()} ${inputTime.value}`
+    savedTasks.push(newTask)
+    localStorage.setItem('todos', JSON.stringify(savedTasks))
+    showTask(newTask)
+
+  })
 
 }

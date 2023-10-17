@@ -15,7 +15,7 @@ body {
   background: var(--bright);
 }
 
-input:not([type="button"]) {
+input:not([type="submit"]) {
   display: block;
   height: 2.5rem;
   width: 100%;
@@ -65,14 +65,11 @@ input:not([type="button"]) {
   background: var(--light);
   padding: 1rem;
   margin: 0.5rem;
-  border-radius: 5px;
+  border-radius: 5px; 
   transform: translateY(40rem);
-  transition: transform .3s ease-out;
-}
-
-.modal__wrapper.active {
-  transform: translateY(2rem);
-}
+  transition: transform .3s ease-out; }
+  .modal__wrapper.active {
+    transform: translateY(2rem); }
 
 .hero {
   padding: 0.1rem 1rem;
@@ -90,6 +87,7 @@ input:not([type="button"]) {
   border-bottom: 1px solid var(--dark);
   margin-top: 5px;
   display: flex;
+  cursor: pointer;
   justify-content: space-between;
   position: relative;
 }
@@ -109,4 +107,8 @@ input:not([type="button"]) {
   cursor: pointer;
   border-radius: 5px;
   background: var(--accent);
+}
+
+label {
+  font-size: 0.8rem;
 }
