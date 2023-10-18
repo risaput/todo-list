@@ -6,11 +6,9 @@ window.onload = function() {
     { isDone: true, task: "Buy Coffee", time: "Sab, Sep 30 07.13" },
   ];
 
-  const form = document.getElementById('form')
-
   let savedTasks = JSON.parse(localStorage.getItem('todos')) || initTasks;
-  const content = document.getElementById('content');
 
+  const content = document.getElementById('content');
   const inputText = document.getElementById('input-text');
   const inputTime = document.getElementById('input-time');
 
@@ -32,25 +30,27 @@ window.onload = function() {
 
       const idx = savedTasksCopy.findIndex(tasks => tasks.task == text);
       savedTasksCopy.splice(idx, 1);
-
-      localStorage.setItem('todos', JSON.stringify(savedTasksCopy));
-      savedTasks = JSON.parse(localStorage.getItem('todos')) || []
+      
+      updateLocalStorage(savedTasksCopy)
       section.remove();
     }
 
     if (classList.contains('todo-list')) {
-      const span = evt.target.firstChild
+      const span = evt.target.firstChild;
       const idx = savedTasksCopy.findIndex(tasks => tasks.task == span.textContent);
 
       savedTasksCopy[idx].isDone = !savedTasksCopy[idx].isDone;
-      localStorage.setItem('todos', JSON.stringify(savedTasksCopy));
-
-      savedTasks = JSON.parse(localStorage.getItem('todos')) || []
+      updateLocalStorage(savedTasksCopy)
+      
       const val = savedTasksCopy[idx].isDone ? 'line-through' : 'none';
       span.style.textDecoration = val;
     }
-
   })
+
+  function updateLocalStorage(arr) {
+    localStorage.setItem('todos', JSON.stringify(arr));
+    savedTasks = JSON.parse(localStorage.getItem('todos')) || [];
+  }
 
   function addBtnRemove() {
     const todoList = Array.from(
@@ -98,29 +98,29 @@ window.onload = function() {
 
 
   const modal = document.getElementById('modal');
-  const modalWrapper = document.getElementById('modal-wrapper');
-  
+
   window.addEventListener('click', function(evt) {
-    const id = evt.target.id
+    const modalWrapper = modal.firstElementChild;
+    const id = evt.target.id;
 
     if (id == 'modal-btn') {
-      modal.classList.add('active')
-      modalWrapper.classList.add('active')
+      modal.classList.add('active');
+      modalWrapper.style.animation = 'slide .7s'
     }
     if (id == 'modal') {
       modal.classList.remove('active')
-      modalWrapper.classList.remove('active')
+      modalWrapper.style.animation = 'none'
     }
   })
 
   function checkRequired(inputArr) {
     inputArr.forEach(function(input) {
-      if (input.required) {
+      if (input.required)
         modal.classList.remove('active')
-        modalWrapper.classList.remove('active')
-      }
     })
   }
+
+  const form = document.getElementById('form')
 
   form.addEventListener('submit', function(evt) {
     evt.preventDefault()

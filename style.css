@@ -33,13 +33,16 @@ input:not([type="submit"]) {
   width: 100%;
   position: fixed;
   top: 0;
-  visibility: hidden;
   opacity: 0;
-  transition: opacity .5s ease-out;
-  z-index: 2; }
-  .modal.active {
-    opacity: 100%;
-    visibility: visible; }
+  transition: opacity .3s ease-in;
+  visibility: hidden;
+  z-index: 2;
+}
+
+.modal.active {
+  opacity: 100%;
+  visibility: visible;
+}
 
 .modal__btn {
   width: 3.3rem;
@@ -61,15 +64,18 @@ input:not([type="submit"]) {
   margin: 0.5rem 0 1rem;
 }
 
+@keyframes slide {
+  from { transform: translateY(40rem); }
+  to { transform: translateY(2rem); }
+}
+
 .modal__wrapper {
   background: var(--light);
   padding: 1rem;
   margin: 0.5rem;
-  border-radius: 5px; 
-  transform: translateY(40rem);
-  transition: transform .3s ease-out; }
-  .modal__wrapper.active {
-    transform: translateY(2rem); }
+  border-radius: 5px;
+  transform: translateY(2rem);
+}
 
 .hero {
   padding: 0.1rem 1rem;
