@@ -9,8 +9,6 @@ window.onload = function() {
   let savedTasks = JSON.parse(localStorage.getItem('todos')) || initTasks;
 
   const content = document.getElementById('content');
-  const inputText = document.getElementById('input-text');
-  const inputTime = document.getElementById('input-time');
 
   for (let task of savedTasks) showTask(task)
 
@@ -27,11 +25,11 @@ window.onload = function() {
     if (classList.contains('todo-remove')) {
       const section = evt.target.parentElement;
       const text = section.firstChild.textContent;
-
       const idx = savedTasksCopy.findIndex(tasks => tasks.task == text);
+
       savedTasksCopy.splice(idx, 1);
-      
       updateLocalStorage(savedTasksCopy)
+
       section.remove();
     }
 
@@ -41,7 +39,7 @@ window.onload = function() {
 
       savedTasksCopy[idx].isDone = !savedTasksCopy[idx].isDone;
       updateLocalStorage(savedTasksCopy)
-      
+
       const val = savedTasksCopy[idx].isDone ? 'line-through' : 'none';
       span.style.textDecoration = val;
     }
@@ -121,22 +119,27 @@ window.onload = function() {
   }
 
   const form = document.getElementById('form')
+  const inputText = document.getElementById('input-text');
+  const inputTime = document.getElementById('input-time');
+
+  function addTask() {
+    const newTask = {
+      task: inputText.value,
+      time: inputTime.value,
+      isDone: false
+
+    }
+    //const dateTime = `${new Date().toDateString()} ${inputTime.value}`
+    savedTasks.push(newTask)
+    localStorage.setItem('todos', JSON.stringify(savedTasks));
+    showTask(newTask)
+  }
 
   form.addEventListener('submit', function(evt) {
     evt.preventDefault()
 
     checkRequired([inputText, inputTime])
-
-    const newTask = {
-      task: inputText.value,
-      time: inputTime.value,
-      isDone: false
-    }
-    //const dateTime = `${new Date().toDateString()} ${inputTime.value}`
-    savedTasks.push(newTask)
-    localStorage.setItem('todos', JSON.stringify(savedTasks))
-    showTask(newTask)
-
+    addTask()
   })
 
 }
